@@ -2,10 +2,10 @@ import socket
 from flask import Flask, render_template, request, jsonify
 from flask_socketio import SocketIO, emit
 
-ratip = "172.18.22.140" # change selon ton ip locale
+ratip = "127.0.0.1" # change selon ton ip locale
 ratport = 9999 # change si tu veux
 
-srvip = "0.0.0.0" # change selon ton ip locale (ou garder comme sa si tu veux garder le panel en locale)
+srvip = "127.0.0.1" # change selon ton ip locale (ou garder comme sa si tu veux garder le panel en locale)
 srvport = 5000 # change si tu veux
 
 app = Flask(__name__)
